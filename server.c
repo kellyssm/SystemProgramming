@@ -11,9 +11,37 @@
 #include <sys/wait.h>
 #include <fcntl.h>
 #include <sys/utsname.h>
+#include <signal.h> // 시그널 헤더 파일 추가
 
 #define PORT 12345
 #define BUFFER_SIZE 256
+
+// 시그널 핸들러 함수 정의
+void sigint_handler(int sig) {
+    // 시그널을 사용하지 않지만 매개변수 사용을 위해 다음과 같이 작성
+    (void)sig;
+    
+    printf("\nCtrl+B detected. Printing server log...\n");
+
+    // 서버 로그 파일 열기
+    FILE *file = fopen("/home/sumin/project24/server_log.txt", "r");
+    if (file == NULL) {
+        perror("fopen");
+        exit(EXIT_FAILURE);
+    }
+
+    // 서버 로그 파일 내용 출력
+    char buffer[BUFFER_SIZE];
+    while (fgets(buffer, sizeof(buffer), file) != NULL) {
+        printf("%s", buffer);
+    }
+
+    // 파일 닫기
+    fclose(file);
+
+    // 시그널 핸들러 종료
+    exit(EXIT_SUCCESS);
+}
 
 void handle_client(int client_socket, int client_number) {
     char buffer[BUFFER_SIZE];
@@ -55,6 +83,9 @@ void handle_client(int client_socket, int client_number) {
 }
 
 int main() {
+    // 시그널 핸들러 등록
+    signal(SIGINT, sigint_handler);
+
     int server_socket, client_socket;
     struct sockaddr_in server_addr, client_addr;
     socklen_t client_len;
