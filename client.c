@@ -8,7 +8,7 @@
 #include <arpa/inet.h>
 #include <sys/ipc.h>
 #include <sys/msg.h>
-#include <signal.h> // 시그널 헤더 파일 추가
+#include <signal.h>
 
 #define SERVER_IP "127.0.0.1"
 #define PORT 12345
@@ -16,15 +16,15 @@
 
 // 시그널 핸들러 함수 정의
 void sigint_handler(int sig) {
-    // 시그널을 사용하지 않지만 매개변수 사용을 위해 다음과 같이 작성
+    
     (void)sig;
     
-    printf("\nCtrl+B detected. Printing server log...\n");
+    printf("\nCtrl+C detected. Printing server log...\n");
 
-    // /home/sumin/project24/server_log.txt 파일 출력
+    //server_log.txt 파일 출력 
     execl("/bin/cat", "cat", "/home/sumin/project24/server_log.txt", NULL);
 
-    // execl 함수는 실행에 실패하면 아래 코드로 넘어오게 되므로 perror를 출력합니다.
+    // execl 함수는 실행에 실패할 경우 perror출력.
     perror("execl");
     exit(EXIT_FAILURE);
 }
