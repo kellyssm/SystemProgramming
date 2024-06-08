@@ -21,7 +21,7 @@ void sigint_handler(int sig) {
     // 시그널을 사용하지 않지만 매개변수 사용을 위해 다음과 같이 작성
     (void)sig;
     
-    printf("\nCtrl+B detected. Printing server log...\n");
+    printf("\nCtrl+C detected. Printing server log...\n");
 
     // 서버 로그 파일 열기
     FILE *file = fopen("/home/sumin/project24/server_log.txt", "r");
